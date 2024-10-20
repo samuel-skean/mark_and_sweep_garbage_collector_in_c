@@ -1,39 +1,7 @@
-For this assignment, we had to fill in parts of a simple garbage collector
-following the mark and sweep strategy. Whenever the garbage collector was
-invoked, it would follow all pointers to the heap from the stack and global
-variables (the two kinds of variables directly accessible to the program)
-recursively and mark those chunks on the heap as “reachable” by changing an
-otherwise-unused bit in the chunk’s size. This means it looks at each potential
-pointer in the code (that is, each 8-byte aligned sequence of 8 bytes), checks
-if it does point inside an in-use block on the heap by checking that it is
-within the bounds of the heap and looping through the blocks until it finds one
-that contains the pointer and is in use, and then changes the
-2nd-least-significant bit of that block’s header to mark it as “reachable”. If
-it finds no such block, or the “pointer” is not within the bounds of the heap,
-it returns the null pointer, communicating that that 8-byte chunk is not, in
-fact, a pointer that the garbage collector needs to mark. Only pointers to the
-heap have their blocks marked because memory elsewhere in the program (in the
-globals and the stack) is handled otherwise. Pointers that point to a non-in-use
-block should also not be marked as reachable, since they are either simply
-8-byte pieces of memory that happen to be interpretable as pointers, and
-therefore will not be used as such in the program, or they are pointers that
-have been freed, and therefore the program should not attempt to dereference
-them because that is undefined behavior - that block may be filled replaced by
-something else. Either way, the program won’t use those “pointers” as pointers
-and the garbage collector shouldn’t attempt to find any other pointers that
-might be accessible through them, as that is a waste of time and could result in
-blocks being marked as reachable when it is only reachable through unsafe memory
-accesses, which shouldn’t happen anyway, so it should be freed.
+For this assignment, we had to fill in parts of a simple garbage collector following the mark and sweep strategy. Whenever the garbage collector was invoked, it would follow all pointers to the heap from the stack and global variables (the two kinds of variables directly accessible to the program) recursively and mark those chunks on the heap as “reachable” by changing an otherwise-unused bit in the chunk’s size. This means it looks at each potential pointer in the code (that is, each 8-byte aligned sequence of 8 bytes), checks if it does point inside an in-use block on the heap by checking that it is within the bounds of the heap and looping through the blocks until it finds one that contains the pointer and is in use, and then changes the 2nd-least-significant bit of that block’s header to mark it as “reachable”. If it finds no such block, or the “pointer” is not within the bounds of the heap, it returns the null pointer, communicating that that 8-byte chunk is not, in fact, a pointer that the garbage collector needs to mark. Only pointers to the heap have their blocks marked because memory elsewhere in the program (in the globals and the stack) is handled otherwise. Pointers that point to a non-in-use block should also not be marked as reachable, since they are either simply 8-byte pieces of memory that happen to be interpretable as pointers, and therefore will not be used as such in the program, or they are pointers that have been freed, and therefore the program should not attempt to dereference them because that is undefined behavior - that block may be filled replaced by something else. Either way, the program won’t use those “pointers” as pointers and the garbage collector shouldn’t attempt to find any other pointers that might be accessible through them, as that is a waste of time and could result in blocks being marked as reachable when it is only reachable through unsafe memory accesses, which shouldn’t happen anyway, so it should be freed.
 
-The recursion is achieved by, whenever the walking function finds a valid
-pointer, it calls itself on the bounds of the payload of the chunk that the
-pointer points inside of. The payload starts 4 bytes after the chunk pointer,
-which points to the header.
+The recursion is achieved by, whenever the walking function finds a valid pointer, it calls itself on the bounds of the payload of the chunk that the pointer points inside of. The payload starts 4 bytes after the chunk pointer, which points to the header.
 
-Then, it would “sweep” through every single chunk in the heap, checking if it is
-marked. This is effectively looping through the chunks. If a chunk is marked, it
-would remove the mark so that it is not assumed to be reachable the next time
-the garbage collector runs. If the chunk is not marked, it is known to not be
-reachable, so it is freed.
+Then, it would “sweep” through every single chunk in the heap, checking if it is marked. This is effectively looping through the chunks. If a chunk is marked, it would remove the mark so that it is not assumed to be reachable the next time the garbage collector runs. If the chunk is not marked, it is known to not be reachable, so it is freed.
 
 That’s about all this code does!
