@@ -1,4 +1,4 @@
-# Garbage Collector in C
+# Conservative Mark-and-Sweep Garbage Collector in C
 
 This is a garbage collector in C that I wrote as part of a systems programming course. I am not listing the precise course number, my university, or the name of the professor to avoid aiding plaigiarism, though I'm sure many similar projects exist online.
 
