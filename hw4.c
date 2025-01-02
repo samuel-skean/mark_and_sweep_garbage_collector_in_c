@@ -93,15 +93,15 @@ void sweep() {
     }
     chunk = next_chunk(chunk);
   }
-  // TODO
-  //Use mm_free to free memory
 }
 
-// determine if what "looks" like a pointer actually points to an 
-// in use block in the heap. if so, return a pointer to its header 
+// determine if an 8-byte-aligned 8-byte value actually points to an
+// in use block in the heap. if so, return a pointer to its header
+// 
+// Only called on values that are reachable, though it would work (in isolation) either way.
 void * is_pointer(void * ptr) {
   // Here's a helpful print statement that shows some available memory operations and working with pointers
-  // printf("checking for pointeryness of %p between %p and %p\n",ptr, mem_heap_lo(), mem_heap_hi()); // TODO: Remove Debug statement.
+  printf("checking for pointeryness of %p between %p and %p\n",ptr, mem_heap_lo(), mem_heap_hi());
   if ((ptr >= mem_heap_lo()) && (ptr <= mem_heap_hi())) {
     void* chunk = mem_heap_lo();
     while ((chunk < mem_heap_hi()) && (chunk_size(chunk) > 0)) {
@@ -113,8 +113,10 @@ void * is_pointer(void * ptr) {
       }
       chunk = next_chunk(chunk);
     }
-    // TODO: how do I know if the pointer is pointing to an actual in-use block?
-    // TODO: in what way does ptr "look" like a pointer before this code is called?
+    // Q: how do I know if the pointer is pointing to an actual in-use block? A:
+    // The in_use function tells you it *may* be pointing to an in-use block.
+    // Q: in what way does ptr "look" like a pointer before this code is
+    // called? A: It's just any 8-byte-aligned 8-byte-value. It doesn't particularly look like a pointer.
   }
   return NULL; // Return null if it is not a pointer 
 
@@ -123,9 +125,9 @@ void * is_pointer(void * ptr) {
 // walk through memory specified by function arguments and mark
 // each chunk
 void walk_region_and_mark(void* start, void* end) {
+  // TODO: Use char*, not void*.
   //fprintf(stderr, "walking %p - %p\n", start, end);
-  // TODO
-  // TODO: Remove these comments. This function, on first call, gets the start and end of the stack or global variable region. 
+  // This function, on first call, gets the start and end of the stack or global variable region. 
   // The start is a lower value than the stack. It needs to find all the pointers between those addresses
   // (using is_pointer to determine if a given 8-byte thing is a pointer - are they all aligned to 8 bytes? A: Yes)
   for (void* potential_ptr_ptr = start; potential_ptr_ptr < end - 8; potential_ptr_ptr += 8) { // TODO: Test whether the -8 is needed.

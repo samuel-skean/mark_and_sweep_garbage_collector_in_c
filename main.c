@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/time.h>
-//TODO: Remove:  (this declaration was used for testing)
+// This declaration is used for testing.
 void * is_pointer(void * ptr);
 
 #define MAX_ALLOCATIONS 4000
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     init_gc();
     timediff();
 
-    // My Testing Code: TODO: Delete
+    // My Testing Code:
     
     // int* h = mm_malloc(4);
     // *h = 0xfe;
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     // gc();
     // void* no = is_pointer(h);
 
-    // End of My Testing Code TODO: Delete Above
+    // End of My Testing Code
     printf("Checking global root set handling and general GC functionality\n");
     printf("Heap before first round of allocations: %zu, free %d, inuse %d\n", mem_heapsize(), free_chunks(), inuse_chunks());
 
